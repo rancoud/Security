@@ -50,7 +50,7 @@ class Security
      *
      * @return string
      */
-    public static function htmlspecialchars($string, int $quote = ENT_NOQUOTES, string $charset = 'UTF-8')
+    public static function htmlspecialchars($string, int $quote = ENT_NOQUOTES, string $charset = 'UTF-8'): string
     {
         $string = (string) $string;
 
@@ -75,9 +75,9 @@ class Security
      *
      * @return string
      */
-    public static function escAttr($text, $charset = 'UTF-8'): string
+    public static function escAttr($text, string $charset = 'UTF-8'): string
     {
-        $text = static::sanitizeUtf8Text($text);
+        $text = static::sanitizeUtf8Text($text, $charset);
 
         $text = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
             $chr = $matches[0];
@@ -113,9 +113,9 @@ class Security
      *
      * @return string
      */
-    public static function escHtml($text, $charset = 'UTF-8'): string
+    public static function escHtml($text, string $charset = 'UTF-8'): string
     {
-        $text = static::sanitizeUtf8Text($text);
+        $text = static::sanitizeUtf8Text($text, $charset);
         $text = static::htmlspecialchars($text, ENT_QUOTES, $charset);
 
         return $text;
@@ -127,9 +127,9 @@ class Security
      *
      * @return string
      */
-    public static function escJs($text, $charset = 'UTF-8'): string
+    public static function escJs($text, string $charset = 'UTF-8'): string
     {
-        $text = static::sanitizeUtf8Text($text);
+        $text = static::sanitizeUtf8Text($text, $charset);
         $text = static::htmlspecialchars($text, ENT_COMPAT, $charset);
         $text = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes($text));
         $text = str_replace("\r", '', $text);
@@ -144,7 +144,7 @@ class Security
      *
      * @return string
      */
-    public static function escTextarea($text, $charset = 'UTF-8'): string
+    public static function escTextarea($text, string $charset = 'UTF-8'): string
     {
         return htmlspecialchars($text, ENT_QUOTES, $charset);
     }

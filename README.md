@@ -11,24 +11,27 @@ composer require rancoud/security
 
 ## How to use it?
 ```php
+Security::sanitizeUtf8Text('string');
 
+Security::htmlspecialchars('string');
+
+Security::escAttr('string');
+
+Security::escHtml('string');
+
+Security::escJs('string');
+
+Security::escTextarea('string');
 ```
 
-## Security Constructor
-### Settings
-#### Mandatory
-| Parameter | Type | Description |
-| --- | --- | --- |
-|  |  |  |
-
-#### Optionnals
-| Parameter | Type | Default value | Description |
-| --- | --- | --- | --- |
-|  |  |  |  |
-
 ## Security Methods
-### General Commands  
-* method(name: type, [optionnal: type = default]):outputType  
+### General Static Commands  
+* sanitizeUtf8Text(string: mixed, [charset: string = 'UTF-8']): string  
+* htmlspecialchars(string: mixed, [quote: int = ENT_NOQUOTES], [charset: string = 'UTF-8']): string  
+* escAttr(text: mixed, [charset: string = 'UTF-8']): string  
+* escHtml(text: mixed, [charset: string = 'UTF-8']): string  
+* escJs(text: mixed, [charset: string = 'UTF-8']): string  
+* escTextarea(text: mixed, [charset: string = 'UTF-8']): string  
 
 ## How to Dev
 `./run_all_commands.sh` for php-cs-fixer and phpunit and coverage  
