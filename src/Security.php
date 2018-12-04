@@ -19,7 +19,7 @@ class Security
     {
         $string = (string) $string;
 
-        if (mb_strlen($string) === 0) {
+        if (\mb_strlen($string) === 0) {
             return '';
         }
 
@@ -29,14 +29,14 @@ class Security
 
         static $utf8Pcre = null;
         if (!isset($utf8Pcre)) {
-            $utf8Pcre = preg_match('/^./u', 'a');
+            $utf8Pcre = \preg_match('/^./u', 'a');
         }
 
         if (!$utf8Pcre) {
             return $string;
         }
 
-        if (preg_match('/^./us', $string) === 1) {
+        if (\preg_match('/^./us', $string) === 1) {
             return $string;
         }
 
@@ -54,7 +54,7 @@ class Security
     {
         $string = (string) $string;
 
-        if (mb_strlen($string) === 0) {
+        if (\mb_strlen($string) === 0) {
             return '';
         }
 
@@ -63,10 +63,10 @@ class Security
         }
 
         if ($charset !== 'UTF-8') {
-            $string = mb_convert_encoding($string, 'UTF-8', $charset);
+            $string = \mb_convert_encoding($string, 'UTF-8', $charset);
         }
 
-        return htmlspecialchars($string, $quote | ENT_SUBSTITUTE, $charset);
+        return \htmlspecialchars($string, $quote | ENT_SUBSTITUTE, $charset);
     }
 
     /**
@@ -79,7 +79,7 @@ class Security
     {
         $text = static::sanitizeUtf8Text($text, $charset);
 
-        $text = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
+        $text = \preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
             $chr = $matches[0];
             $ord = \ord($chr);
 
@@ -87,7 +87,7 @@ class Security
                 return '&#xFFFD;';
             }
 
-            if (mb_strlen($chr) === 1) {
+            if (\mb_strlen($chr) === 1) {
                 static $entityMap = [
                     34 => '&quot;',
                     38 => '&amp;',
@@ -98,10 +98,10 @@ class Security
                     return $entityMap[$ord];
                 }
 
-                return sprintf('&#x%02X;', $ord);
+                return \sprintf('&#x%02X;', $ord);
             }
 
-            return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
+            return \sprintf('&#x%04X;', \mb_ord($chr, 'UTF-8'));
         }, $text);
 
         return $text;
@@ -131,9 +131,9 @@ class Security
     {
         $text = static::sanitizeUtf8Text($text, $charset);
         $text = static::htmlspecialchars($text, ENT_COMPAT, $charset);
-        $text = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes($text));
-        $text = str_replace("\r", '', $text);
-        $text = str_replace("\n", '\\n', addslashes($text));
+        $text = \preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", \stripslashes($text));
+        $text = \str_replace("\r", '', $text);
+        $text = \str_replace("\n", '\\n', \addslashes($text));
 
         return $text;
     }
@@ -146,6 +146,6 @@ class Security
      */
     public static function escTextarea($text, string $charset = 'UTF-8'): string
     {
-        return htmlspecialchars($text, ENT_QUOTES, $charset);
+        return \htmlspecialchars($text, ENT_QUOTES, $charset);
     }
 }
