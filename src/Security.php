@@ -81,7 +81,7 @@ class Security
 
         $text = \preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
             $chr = $matches[0];
-            $ord = \ord($chr);
+            $ord = \mb_ord($chr);
 
             if (($ord <= 0x1f && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
                 return '&#xFFFD;';
