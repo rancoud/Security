@@ -12,7 +12,7 @@ use Rancoud\Security\Security;
  */
 class SecurityTest extends TestCase
 {
-    public function data()
+    public function data(): array
     {
         return [
             'lambda' => ['name', 'name', 'UTF-8'],
@@ -30,7 +30,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataAttr()
+    public function dataAttr(): array
     {
         return [
             'lambda' => ['name', 'name', 'UTF-8'],
@@ -51,14 +51,14 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider dataAttr
      */
-    public function testEscAttr($input, $expected, $charset)
+    public function testEscAttr($input, $expected, $charset): void
     {
         self::assertSame($expected, Security::escAttr($input, $charset));
     }
     /**
      * @dataProvider data
      */
-    public function testEscHtml($input, $expected, $charset)
+    public function testEscHtml($input, $expected, $charset): void
     {
         self::assertSame($expected, Security::escHtml($input, $charset));
     }
@@ -66,7 +66,7 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider data
      */
-    public function testEscJs($input, $expected, $charset)
+    public function testEscJs($input, $expected, $charset): void
     {
         self::assertSame($expected, Security::escJs($input, $charset));
     }
@@ -74,7 +74,7 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider data
      */
-    public function testTextarea($input, $expected, $charset)
+    public function testTextarea($input, $expected, $charset): void
     {
         self::assertSame($expected, Security::escTextarea($input, $charset));
     }

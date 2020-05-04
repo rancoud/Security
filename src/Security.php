@@ -19,7 +19,7 @@ class Security
     {
         $string = (string) $string;
 
-        if (\mb_strlen($string) === 0) {
+        if ($string === '') {
             return '';
         }
 
@@ -54,7 +54,7 @@ class Security
     {
         $string = (string) $string;
 
-        if (\mb_strlen($string) === 0) {
+        if ($string === '') {
             return '';
         }
 
@@ -79,7 +79,7 @@ class Security
     {
         $text = static::sanitizeUtf8Text($text, $charset);
 
-        $text = \preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
+        $text = \preg_replace_callback('#[^a-zA-Z0-9,.\-_]#Su', static function ($matches) {
             $chr = $matches[0];
             $ord = \mb_ord($chr);
 
@@ -94,11 +94,8 @@ class Security
                     60 => '&lt;',
                     62 => '&gt;'
                 ];
-                if (isset($entityMap[$ord])) {
-                    return $entityMap[$ord];
-                }
 
-                return \sprintf('&#x%02X;', $ord);
+                return $entityMap[$ord] ?? \sprintf('&#x%02X;', $ord);
             }
 
             return \sprintf('&#x%04X;', \mb_ord($chr, 'UTF-8'));
