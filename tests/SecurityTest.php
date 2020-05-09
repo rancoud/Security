@@ -41,7 +41,7 @@ class SecurityTest extends TestCase
             'form feed' => ["\f", ''],
             'null' => ["\0", "\0"],
             'space' => [' ', ' '],
-            'slash' => ['/', '/'],
+            'slash' => ['/', '&#47;'],
             'antislash' => ['\\', '\\'],
             'chinese' => ['你好', '你好'],
             'hindi' => ['नमस्ते', 'नमस्ते'],
