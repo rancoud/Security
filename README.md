@@ -38,8 +38,6 @@ Security::isCharsetSupported('string');
 
 ## Security Methods
 ### General Static Commands  
-* sanitizeUtf8Text(string: mixed, [charset: string = 'UTF-8']): string  
-* htmlspecialchars(string: mixed, [quote: int = ENT_NOQUOTES], [charset: string = 'UTF-8']): string  
 * escAttr(text: mixed, [charset: string = 'UTF-8']): string  
 * escHtml(text: mixed, [charset: string = 'UTF-8']): string  
 * escJs(text: mixed, [charset: string = 'UTF-8']): string  
