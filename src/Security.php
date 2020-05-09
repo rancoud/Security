@@ -95,7 +95,7 @@ class Security
         $text = static::convertStringToUtf8($text, $charset);
 
         $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
-        $text = str_replace("/", "&#47;", $text);
+        $text = \str_replace('/', '&#47;', $text);
 
         $text = static::convertStringFromUtf8($text, $charset);
 
