@@ -1,6 +1,12 @@
 # Security Package
 
-[![Build Status](https://travis-ci.org/rancoud/Security.svg?branch=master)](https://travis-ci.org/rancoud/Security) [![Coverage Status](https://coveralls.io/repos/github/rancoud/Security/badge.svg?branch=master)](https://coveralls.io/github/rancoud/Security?branch=master)
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/rancoud/security)
+[![Packagist Version](https://img.shields.io/packagist/v/rancoud/security)](https://packagist.org/packages/rancoud/security)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/rancoud/security)](https://packagist.org/packages/rancoud/security)
+[![Composer dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/rancoud/Security/blob/master/composer.json)
+[![Build Status](https://travis-ci.org/rancoud/Security.svg?branch=master)](https://travis-ci.org/rancoud/Security)
+[![Coverage Status](https://coveralls.io/repos/github/rancoud/Security/badge.svg?branch=master)](https://coveralls.io/github/rancoud/Security?branch=master)
+[![composer.lock](https://poser.pugx.org/rancoud/security/composerlock)](https://packagist.org/packages/rancoud/security)
 
 Security.  
 
