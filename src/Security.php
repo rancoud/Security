@@ -9,7 +9,7 @@ namespace Rancoud\Security;
  */
 class Security
 {
-    protected static array $supportedCharsets = [
+    protected static array $knownCharsets = [
         'ISO-8859-1'  => true, // Western European, Latin-1
         'ISO-8859-5'  => true, // Little used cyrillic charset (Latin/Cyrillic)
         'ISO-8859-15' => true, // Western European, Latin-9
@@ -27,18 +27,48 @@ class Security
     ];
 
     /**
-     * @param $string
+     * Array of supported charsets will be generated when used.
+     */
+    private static ?array $supportedCharsets = null;
+
+    /**
+     * @param string $charsetToCheck
+     * @param string $charsetReference
+     *
+     * @return bool
+     */
+    public static function areCharsetAliases(string $charsetToCheck, string $charsetReference): bool
+    {
+        return \in_array($charsetToCheck, \mb_encoding_aliases($charsetReference), true);
+    }
+
+    /**
+     * @param string $charset1
+     *
+     * @return bool
+     */
+    public static function isUTF8Alias(string $charset): bool
+    {
+        return static::areCharsetAliases($charset, 'UTF-8');
+    }
+
+    /**
+     * @param mixed  $string
      * @param string $charset
      *
      * @throws SecurityException
      *
      * @return string
      */
-    protected static function convertStringToUtf8($string, $charset = 'UTF-8'): string
+    protected static function convertStringToUTF8($string, string $charset = 'UTF-8'): string
     {
         $string = (string) $string;
 
-        if ($charset !== 'UTF-8') {
+        if (!\mb_check_encoding($string, $charset)) {
+            throw new SecurityException('String to convert is not valid for the specified charset');
+        }
+
+        if (!static::isUtf8Alias($charset)) {
             $string = \mb_convert_encoding($string, 'UTF-8', $charset);
         }
 
@@ -55,11 +85,11 @@ class Security
      *
      * @return string
      */
-    protected static function convertStringFromUtf8($string, $charset = 'UTF-8'): string
+    protected static function convertStringFromUTF8($string, $charset = 'UTF-8'): string
     {
         $string = (string) $string;
 
-        if ($charset === 'UTF-8') {
+        if (static::isUtf8Alias($charset)) {
             return $string;
         }
 
@@ -68,27 +98,52 @@ class Security
         return $string;
     }
 
+    private static function generateSupportedEncodings()
+    {
+        $charsets = [];
+
+        foreach (static::$knownCharsets as $charset => $supported) {
+            if (!$supported) {
+                continue;
+            }
+
+            $charsets[] = $charset;
+
+            if (!\in_array($charset, \mb_list_encodings(), true)) {
+                continue;
+            }
+
+            $charsets += \mb_encoding_aliases($charset);
+        }
+
+        self::$supportedCharsets = \array_unique($charsets);
+    }
+
     /**
      * @param string $charset
      *
      * @return bool
      */
-    public static function isCharsetSupported(string $charset): bool
+    public static function isSupportedCharset(string $charset): bool
     {
-        return isset(static::$supportedCharsets[$charset]);
+        if (self::$supportedCharsets === null) {
+            self::generateSupportedEncodings();
+        }
+
+        return \in_array($charset, self::$supportedCharsets, true);
     }
 
     /**
-     * @param        $text
+     * @param mixed  $text
      * @param string $charset
      *
      * @throws SecurityException
      *
      * @return string
      */
-    public static function escHtml($text, string $charset = 'UTF-8'): string
+    public static function escHTML($text, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
+        if (!static::isSupportedCharset($charset)) {
             throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
         }
 
@@ -103,7 +158,7 @@ class Security
     }
 
     /**
-     * @param        $text
+     * @param mixed  $text
      * @param string $charset
      *
      * @throws SecurityException
@@ -112,7 +167,7 @@ class Security
      */
     public static function escAttr($text, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
+        if (!static::isSupportedCharset($charset)) {
             throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
         }
 
@@ -153,16 +208,16 @@ class Security
     }
 
     /**
-     * @param        $text
+     * @param mixed  $text
      * @param string $charset
      *
      * @throws SecurityException
      *
      * @return string
      */
-    public static function escJs($text, string $charset = 'UTF-8'): string
+    public static function escJS($text, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
+        if (!static::isSupportedCharset($charset)) {
             throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
         }
 

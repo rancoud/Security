@@ -13,10 +13,10 @@ use Rancoud\Security\SecurityException;
  */
 class SecurityTest extends TestCase
 {
-    public function dataHtml(): array
+    public function dataHTML(): array
     {
         return [
-            'backtick' => ["`", '`'],
+            'backtick' => ['`', '`'],
             'single quote' => ["'", '&#039;'],
             'double quote' => ['"', '&quot;'],
             'open tag' => ['<', '&lt;'],
@@ -100,7 +100,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataJs(): array
+    public function dataJS(): array
     {
         return [
             'backtick' => ["`", '\\x60'],
@@ -144,7 +144,7 @@ class SecurityTest extends TestCase
     }
 
     /**
-     * @dataProvider dataHtml
+     * @dataProvider dataHTML
      * @param string $input
      * @param string $expected
      * @throws SecurityException
@@ -166,18 +166,20 @@ class SecurityTest extends TestCase
     }
 
     /**
-     * @dataProvider dataJs
+     * @dataProvider dataJS
      * @param string $input
      * @param string $expected
      * @throws SecurityException
      */
-    public function testEscJs(string $input, string $expected): void
+    public function testEscJS(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escJs($input));
     }
 
-    public function testUnicodeEncodingXss(): void
+    public function testUnicodeEncodingXSS(): void
     {
+        $this->expectException(SecurityException::class);
+
         self::assertSame('숝訊昱穿刷奄剔㝆穽侘㈊섞昌侄從쒜', Security::escHtml('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
         self::assertSame('&#x00EC;&#x02C6;&#xFFFD;&#x00E8;&#x00A8;&#x0160;&#x00E6;&#x02DC;&#x00B1;&#x00E7;&#x00A9;&#x00BF;&#x00E5;&#x02C6;&#x00B7;&#x00E5;&#x00A5;&#x201E;&#x00E5;&#x2030;&#x201D;&#x00E3;&#xFFFD;&#x2020;&#x00E7;&#x00A9;&#x00BD;&#x00E4;&#x00BE;&#x02DC;&#x00E3;&#x02C6;&#x0160;&#x00EC;&#x201E;&#x017E;&#x00E6;&#x02DC;&#x0152;&#x00E4;&#x00BE;&#x201E;&#x00E5;&#x00BE;&#x017E;&#x00EC;&#x2019;&#x0153;', Security::escAttr('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
         self::assertSame('\u00EC\u02C6\uFFFD\u00E8\u00A8\u0160\u00E6\u02DC\u00B1\u00E7\u00A9\u00BF\u00E5\u02C6\u00B7\u00E5\u00A5\u201E\u00E5\u2030\u201D\u00E3\uFFFD\u2020\u00E7\u00A9\u00BD\u00E4\u00BE\u02DC\u00E3\u02C6\u0160\u00EC\u201E\u017E\u00E6\u02DC\u0152\u00E4\u00BE\u201E\u00E5\u00BE\u017E\u00EC\u2019\u0153', Security::escJs('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
@@ -185,58 +187,58 @@ class SecurityTest extends TestCase
 
     public function testCharsetNotSupportedException(): void
     {
-        $countExceptionThrow = 0;
+        $countThrownExceptions = 0;
 
         try {
-            Security::escHtml("a", 'nope');
+            Security::escHTML('a', 'nope');
         } catch (SecurityException $e) {
             self::assertSame("Charset 'nope' is not supported", $e->getMessage());
-            $countExceptionThrow++;
+            $countThrownExceptions++;
         }
 
         try {
-            Security::escAttr("a", 'nope');
+            Security::escAttr('a', 'nope');
         } catch (SecurityException $e) {
             self::assertSame("Charset 'nope' is not supported", $e->getMessage());
-            $countExceptionThrow++;
+            $countThrownExceptions++;
         }
 
         try {
-            Security::escJs("a", 'nope');
+            Security::escJS('a', 'nope');
         } catch (SecurityException $e) {
             self::assertSame("Charset 'nope' is not supported", $e->getMessage());
-            $countExceptionThrow++;
+            $countThrownExceptions++;
         }
 
-        self::assertSame(3, $countExceptionThrow);
+        self::assertSame(3, $countThrownExceptions);
     }
 
     public function testInvalidCharacter(): void
     {
         $invalidChar = \chr(99999999);
-        $countExceptionThrow = 0;
+        $countThrownExceptions = 0;
 
         try {
-            Security::escHtml($invalidChar);
+            Security::escHTML($invalidChar);
         } catch (SecurityException $e) {
-            self::assertSame("After conversion string is not a valid UTF-8 sequence", $e->getMessage());
-            $countExceptionThrow++;
+            self::assertSame("String to convert is not valid for the specified charset", $e->getMessage());
+            $countThrownExceptions++;
         }
 
         try {
             Security::escAttr($invalidChar);
         } catch (SecurityException $e) {
-            self::assertSame("After conversion string is not a valid UTF-8 sequence", $e->getMessage());
-            $countExceptionThrow++;
+            self::assertSame("String to convert is not valid for the specified charset", $e->getMessage());
+            $countThrownExceptions++;
         }
 
         try {
-            Security::escJs($invalidChar);
+            Security::escJS($invalidChar);
         } catch (SecurityException $e) {
-            self::assertSame("After conversion string is not a valid UTF-8 sequence", $e->getMessage());
-            $countExceptionThrow++;
+            self::assertSame("String to convert is not valid for the specified charset", $e->getMessage());
+            $countThrownExceptions++;
         }
 
-        self::assertSame(3, $countExceptionThrow);
+        self::assertSame(3, $countThrownExceptions);
     }
 }

@@ -8,7 +8,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/rancoud/security?logo=codecov)](https://codecov.io/gh/rancoud/security)
 [![composer.lock](https://poser.pugx.org/rancoud/security/composerlock)](https://packagist.org/packages/rancoud/security)
 
-Security.  
+Security.
 
 ## Installation
 ```php
@@ -19,11 +19,11 @@ composer require rancoud/security
 ```php
 Security::escAttr('string');
 
-Security::escHtml('string');
+Security::escHTML('string');
 
-Security::escJs('string');
+Security::escJS('string');
 
-Security::isCharsetSupported('string');
+Security::isSupportedCharset('string');
 ```
 
 ## Supported Charsets
@@ -43,13 +43,13 @@ Security::isCharsetSupported('string');
 * MacRoman
 
 ## Security Methods
-### General Static Commands  
-* escAttr(text: mixed, [charset: string = 'UTF-8']): string  
-* escHtml(text: mixed, [charset: string = 'UTF-8']): string  
-* escJs(text: mixed, [charset: string = 'UTF-8']): string  
-* isCharsetSupported(charset: string): bool  
+### General Static Commands
+* escAttr(text: mixed, [charset: string = 'UTF-8']): string
+* escHTML(text: mixed, [charset: string = 'UTF-8']): string
+* escJS(text: mixed, [charset: string = 'UTF-8']): string
+* isSupportedCharset(charset: string): bool
 
 ## How to Dev
-`composer ci` for php-cs-fixer and phpunit and coverage  
-`composer lint` for php-cs-fixer  
-`composer test` for phpunit and coverage  
+`composer ci` for php-cs-fixer and phpunit and coverage
+`composer lint` for php-cs-fixer
+`composer test` for phpunit and coverage
