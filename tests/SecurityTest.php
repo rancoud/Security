@@ -149,7 +149,7 @@ class SecurityTest extends TestCase
      * @param string $expected
      * @throws SecurityException
      */
-    public function testEscHtml(string $input, string $expected): void
+    public function testEscHTML(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escHTML($input));
     }
