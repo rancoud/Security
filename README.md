@@ -35,23 +35,24 @@ Security::isSupportedCharset('string');
 * cp1251
 * cp1252
 * KOI8-R
-* BIG5
+* ~~BIG5~~
 * GB2312
-* BIG5-HKSCS
-* Shift_JIS
+* ~~BIG5-HKSCS~~
+* ~~Shift_JIS~~
 * EUC-JP
-* MacRoman
+* ~~MacRoman~~
 
 ## Security Methods
 ### General Static Methods
-* escAttr(text: mixed, [charset: string = 'UTF-8']): string
-* escHTML(text: mixed, [charset: string = 'UTF-8']): string
-* escJS(text: mixed, [charset: string = 'UTF-8']): string
+* isPHPSupportedCharset(charset: string): bool
 * isSupportedCharset(charset: string): bool
 * areCharsetAliases(charsetToCheck: string, charsetReference: string): bool
 * isUTF8Alias((charsetToCheck: string): bool
+* escHTML(text: mixed, [charset: string = 'UTF-8']): string
+* escAttr(text: mixed, [charset: string = 'UTF-8']): string
+* escJS(text: mixed, [charset: string = 'UTF-8']): string
 
 ## How to Dev
-`composer ci` for php-cs-fixer and phpunit and coverage
-`composer lint` for php-cs-fixer
-`composer test` for phpunit and coverage
+`composer ci` for php-cs-fixer and phpunit and coverage  
+`composer lint` for php-cs-fixer  
+`composer test` for phpunit and coverage  
