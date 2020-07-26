@@ -151,7 +151,7 @@ class SecurityTest extends TestCase
      */
     public function testEscHtml(string $input, string $expected): void
     {
-        self::assertSame($expected, Security::escHtml($input));
+        self::assertSame($expected, Security::escHTML($input));
     }
 
     /**
@@ -173,16 +173,16 @@ class SecurityTest extends TestCase
      */
     public function testEscJS(string $input, string $expected): void
     {
-        self::assertSame($expected, Security::escJs($input));
+        self::assertSame($expected, Security::escJS($input));
     }
 
     public function testUnicodeEncodingXSS(): void
     {
         $this->expectException(SecurityException::class);
 
-        self::assertSame('숝訊昱穿刷奄剔㝆穽侘㈊섞昌侄從쒜', Security::escHtml('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
+        self::assertSame('숝訊昱穿刷奄剔㝆穽侘㈊섞昌侄從쒜', Security::escHTML('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
         self::assertSame('&#x00EC;&#x02C6;&#xFFFD;&#x00E8;&#x00A8;&#x0160;&#x00E6;&#x02DC;&#x00B1;&#x00E7;&#x00A9;&#x00BF;&#x00E5;&#x02C6;&#x00B7;&#x00E5;&#x00A5;&#x201E;&#x00E5;&#x2030;&#x201D;&#x00E3;&#xFFFD;&#x2020;&#x00E7;&#x00A9;&#x00BD;&#x00E4;&#x00BE;&#x02DC;&#x00E3;&#x02C6;&#x0160;&#x00EC;&#x201E;&#x017E;&#x00E6;&#x02DC;&#x0152;&#x00E4;&#x00BE;&#x201E;&#x00E5;&#x00BE;&#x017E;&#x00EC;&#x2019;&#x0153;', Security::escAttr('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
-        self::assertSame('\u00EC\u02C6\uFFFD\u00E8\u00A8\u0160\u00E6\u02DC\u00B1\u00E7\u00A9\u00BF\u00E5\u02C6\u00B7\u00E5\u00A5\u201E\u00E5\u2030\u201D\u00E3\uFFFD\u2020\u00E7\u00A9\u00BD\u00E4\u00BE\u02DC\u00E3\u02C6\u0160\u00EC\u201E\u017E\u00E6\u02DC\u0152\u00E4\u00BE\u201E\u00E5\u00BE\u017E\u00EC\u2019\u0153', Security::escJs('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
+        self::assertSame('\u00EC\u02C6\uFFFD\u00E8\u00A8\u0160\u00E6\u02DC\u00B1\u00E7\u00A9\u00BF\u00E5\u02C6\u00B7\u00E5\u00A5\u201E\u00E5\u2030\u201D\u00E3\uFFFD\u2020\u00E7\u00A9\u00BD\u00E4\u00BE\u02DC\u00E3\u02C6\u0160\u00EC\u201E\u017E\u00E6\u02DC\u0152\u00E4\u00BE\u201E\u00E5\u00BE\u017E\u00EC\u2019\u0153', Security::escJS('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252'));
     }
 
     public function testCharsetNotSupportedException(): void
@@ -240,5 +240,36 @@ class SecurityTest extends TestCase
         }
 
         self::assertSame(3, $countThrownExceptions);
+    }
+
+    public function testUTF8Aliases(): void
+    {
+        self::assertTrue(Security::isUTF8Alias('UTf-8'));
+        self::assertTrue(Security::isUTF8Alias('uTF8'));
+        self::assertFalse(Security::isUTF8Alias('ISO-8859-1'));
+        self::assertFalse(Security::isUTF8Alias('UTF_8'));
+        self::assertFalse(Security::isUTF8Alias('UTF--8'));
+    }
+
+    public function testCharsetsAliases(): void
+    {
+        self::assertTrue(Security::areCharsetAliases('WinDOws-1252', 'cP1252'));
+        self::assertFalse(Security::areCharsetAliases('WinDOws-1252', 'gb2312'));
+    }
+
+    public function testCharsetsAliasesExceptionUTF8(): void
+    {
+        $this->expectException(SecurityException::class);
+        $this->expectExceptionMessage('Charset \'UTF--8\' is not supported');
+
+        Security::areCharsetAliases('UTF-8', 'UTF--8');
+    }
+
+    public function testCharsetsAliasesExceptionBIG5(): void
+    {
+        $this->expectException(SecurityException::class);
+        $this->expectExceptionMessage('Charset \'FOO\' is not supported');
+
+        Security::areCharsetAliases('FOO', 'BAR');
     }
 }
