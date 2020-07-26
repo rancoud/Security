@@ -9,41 +9,17 @@ namespace Rancoud\Security;
  */
 class Security
 {
-    protected static array $knownCharsets = [
-        'ISO-8859-1',   // Western European, Latin-1
-        'ISO-8859-5',   // Little used cyrillic charset (Latin/Cyrillic)
-        'ISO-8859-15',  // Western European, Latin-9
-        'UTF-8',        // ASCII compatible multi-byte 8-bit Unicode
-        'cp866',        // DOS-specific Cyrillic charset
-        'cp1251',       // Windows-specific Cyrillic charset
-        'cp1252',       // Windows specific charset for Western European
-        'KOI8-R',       // Russian
-        'BIG5',         // Traditional Chinese, mainly used in Taiwan
-        'GB2312',       // Simplified Chinese, national standard character set
-        'BIG5-HKSCS',   // Big5 with Hong Kong extensions, Traditional Chinese
-        'Shift_JIS',    // Japanese
-        'EUC-JP',       // Japanese
-        'MacRoman'      // Charset that was used by Mac OS
-    ];
-
     /**
-     * Array of supported charsets. It will be generated when first used.
+     * Array of charsets supported by PHP. It will be generated when first used.
      *
      * @var array|null
      */
     private static ?array $supportedCharsets = null;
 
     /**
-     * Array of charsets supported by PHP. It will be generated when first used.
-     *
-     * @var array|null
-     */
-    private static ?array $phpSupportedCharsets = null;
-
-    /**
      * @return array
      */
-    private static function generatePHPSupportedCharsets(): array
+    private static function generateSupportedCharsets(): array
     {
         $charsets = \array_map('\strtolower', \mb_list_encodings());
 
@@ -54,64 +30,6 @@ class Security
         $aliases = \array_map($callbackAliases, $charsets);
 
         return \array_combine($charsets, $aliases);
-    }
-
-    /**
-     * @return array
-     */
-    private static function generateSupportedCharsets(): array
-    {
-        $charsets = [];
-
-        foreach (static::$knownCharsets as $charset) {
-            if (!self::isPHPSupportedCharset($charset)) {
-                continue;
-            }
-
-            $lowerCharset = \strtolower($charset);
-
-            if (isset(self::$phpSupportedCharsets[$lowerCharset])) {
-                $charsets[] = $lowerCharset;
-                $charsets = \array_merge($charsets, self::$phpSupportedCharsets[$lowerCharset]);
-                continue;
-            }
-
-            foreach (self::$phpSupportedCharsets as $supportedCharset => $aliases) {
-                if (\in_array($lowerCharset, $aliases, true)) {
-                    $charsets[] = $supportedCharset;
-                    $charsets = \array_merge($charsets, $aliases);
-                    continue 2;
-                }
-            }
-        }
-
-        return \array_unique($charsets);
-    }
-
-    /**
-     * @param string $charset
-     *
-     * @return bool
-     */
-    public static function isPHPSupportedCharset(string $charset): bool
-    {
-        if (self::$phpSupportedCharsets === null) {
-            self::$phpSupportedCharsets = self::generatePHPSupportedCharsets();
-        }
-
-        $lowerCharset = \strtolower($charset);
-
-        if (isset(self::$phpSupportedCharsets[$lowerCharset])) {
-            return true;
-        }
-
-        foreach (self::$phpSupportedCharsets as $aliases) {
-            if (\in_array($lowerCharset, $aliases, true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -127,7 +45,17 @@ class Security
 
         $lowerCharset = \strtolower($charset);
 
-        return \in_array($lowerCharset, self::$supportedCharsets, true);
+        if (isset(self::$supportedCharsets[$lowerCharset])) {
+            return true;
+        }
+
+        foreach (self::$supportedCharsets as $aliases) {
+            if (\in_array($lowerCharset, $aliases, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -163,15 +91,15 @@ class Security
             return true;
         }
 
-        if (isset(self::$phpSupportedCharsets[$lowerCharset1])) {
-            return \in_array($lowerCharset2, self::$phpSupportedCharsets[$lowerCharset1], true);
+        if (isset(self::$supportedCharsets[$lowerCharset1])) {
+            return \in_array($lowerCharset2, self::$supportedCharsets[$lowerCharset1], true);
         }
 
-        if (isset(self::$phpSupportedCharsets[$lowerCharset2])) {
-            return \in_array($lowerCharset1, self::$phpSupportedCharsets[$lowerCharset2], true);
+        if (isset(self::$supportedCharsets[$lowerCharset2])) {
+            return \in_array($lowerCharset1, self::$supportedCharsets[$lowerCharset2], true);
         }
 
-        foreach (self::$phpSupportedCharsets as $aliases) {
+        foreach (self::$supportedCharsets as $aliases) {
             $isAlias1 = \in_array($lowerCharset1, $aliases, true);
             $isAlias2 = \in_array($lowerCharset2, $aliases, true);
 
@@ -193,7 +121,7 @@ class Security
         $lowerCharset = \strtolower($charset);
 
         return \strtolower($charset) === 'utf-8'
-            || \in_array($lowerCharset, self::$phpSupportedCharsets['utf-8'], true);
+            || \in_array($lowerCharset, self::$supportedCharsets['utf-8'], true);
     }
 
     /**
@@ -260,7 +188,7 @@ class Security
     {
         $text = static::convertStringToUTF8($text, $charset);
 
-        $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+        $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $text = \str_replace('/', '&#47;', $text);
 
         $text = static::convertStringFromUTF8($text, $charset);
