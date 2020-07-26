@@ -28,8 +28,8 @@ Security::isSupportedCharset('string');
 
 ## Supported Charsets
 All charset supported by mbstring extension.  
-![More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
-![And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
+[More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
+[And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
 
 ## Security Methods
 ### General Static Methods
