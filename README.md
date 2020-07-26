@@ -48,6 +48,8 @@ Security::isSupportedCharset('string');
 * escHTML(text: mixed, [charset: string = 'UTF-8']): string
 * escJS(text: mixed, [charset: string = 'UTF-8']): string
 * isSupportedCharset(charset: string): bool
+* areCharsetAliases(charsetToCheck: string, charsetReference: string): bool
+* isUTF8Alias((charsetToCheck: string): bool
 
 ## How to Dev
 `composer ci` for php-cs-fixer and phpunit and coverage
