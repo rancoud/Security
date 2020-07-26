@@ -20,10 +20,10 @@ class Security
         'KOI8-R'      => true, // Russian
         'BIG5'        => true, // Traditional Chinese, mainly used in Taiwan
         'GB2312'      => true, // Simplified Chinese, national standard character set
-        'BIG5-HKSCS'  => true, // Big5 with Hong Kong extensions, Traditional Chinese
-        'Shift_JIS'   => true, // Japanese
+        // 'BIG5-HKSCS'  => true, // Big5 with Hong Kong extensions, Traditional Chinese
+        // 'Shift_JIS'   => true, // Japanese
         'EUC-JP'      => true, // Japanese
-        'MacRoman'    => true  // Charset that was used by Mac OS
+        // 'MacRoman'    => true  // Charset that was used by Mac OS
     ];
 
     /**
