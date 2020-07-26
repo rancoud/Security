@@ -43,7 +43,7 @@ Security::isSupportedCharset('string');
 * MacRoman
 
 ## Security Methods
-### General Static Commands
+### General Static Methods
 * escAttr(text: mixed, [charset: string = 'UTF-8']): string
 * escHTML(text: mixed, [charset: string = 'UTF-8']): string
 * escJS(text: mixed, [charset: string = 'UTF-8']): string
