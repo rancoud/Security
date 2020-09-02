@@ -8,7 +8,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/rancoud/security?logo=codecov)](https://codecov.io/gh/rancoud/security)
 [![composer.lock](https://poser.pugx.org/rancoud/security/composerlock)](https://packagist.org/packages/rancoud/security)
 
-Security.
+Escape string to output HTML (and JS).
 
 ## Installation
 ```php
