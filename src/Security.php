@@ -14,12 +14,12 @@ class Security
      *
      * @var array|null
      */
-    private static ?array $supportedCharsets = null;
+    protected static ?array $supportedCharsets = null;
 
     /**
      * @return array
      */
-    private static function generateSupportedCharsets(): array
+    protected static function generateSupportedCharsets(): array
     {
         $charsets = \array_map('\strtolower', \mb_list_encodings());
 
