@@ -61,7 +61,7 @@ class Security
     /**
      * @param string $charset
      *
-     * @throw SecurityException
+     * @throws SecurityException
      */
     protected static function throwExceptionIfCharsetIsUnsupported(string $charset): void
     {
