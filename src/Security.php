@@ -39,17 +39,17 @@ class Security
      */
     public static function isSupportedCharset(string $charset): bool
     {
-        if (self::$supportedCharsets === null) {
-            self::$supportedCharsets = self::generateSupportedCharsets();
+        if (static::$supportedCharsets === null) {
+            static::$supportedCharsets = static::generateSupportedCharsets();
         }
 
         $lowerCharset = \strtolower($charset);
 
-        if (isset(self::$supportedCharsets[$lowerCharset])) {
+        if (isset(static::$supportedCharsets[$lowerCharset])) {
             return true;
         }
 
-        foreach (self::$supportedCharsets as $aliases) {
+        foreach (static::$supportedCharsets as $aliases) {
             if (\in_array($lowerCharset, $aliases, true)) {
                 return true;
             }
@@ -91,15 +91,15 @@ class Security
             return true;
         }
 
-        if (isset(self::$supportedCharsets[$lowerCharset1])) {
-            return \in_array($lowerCharset2, self::$supportedCharsets[$lowerCharset1], true);
+        if (isset(static::$supportedCharsets[$lowerCharset1])) {
+            return \in_array($lowerCharset2, static::$supportedCharsets[$lowerCharset1], true);
         }
 
-        if (isset(self::$supportedCharsets[$lowerCharset2])) {
-            return \in_array($lowerCharset1, self::$supportedCharsets[$lowerCharset2], true);
+        if (isset(static::$supportedCharsets[$lowerCharset2])) {
+            return \in_array($lowerCharset1, static::$supportedCharsets[$lowerCharset2], true);
         }
 
-        foreach (self::$supportedCharsets as $aliases) {
+        foreach (static::$supportedCharsets as $aliases) {
             $isAlias1 = \in_array($lowerCharset1, $aliases, true);
             $isAlias2 = \in_array($lowerCharset2, $aliases, true);
 
@@ -121,7 +121,7 @@ class Security
         $lowerCharset = \strtolower($charset);
 
         return \strtolower($charset) === 'utf-8'
-            || \in_array($lowerCharset, self::$supportedCharsets['utf-8'], true);
+            || \in_array($lowerCharset, static::$supportedCharsets['utf-8'], true);
     }
 
     /**
