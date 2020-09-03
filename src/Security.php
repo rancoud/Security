@@ -96,11 +96,11 @@ class Security
             $string = \mb_convert_encoding($string, 'UTF-8', $charset);
         }
 
-        /* @codeCoverageIgnoreStart */
+        // @codeCoverageIgnoreStart
         if ($string !== '' && \preg_match('/^./su', $string) !== 1) {
             throw new SecurityException('After conversion string is not a valid UTF-8 sequence');
         }
-        /* @codeCoverageIgnoreEnd */
+        // @codeCoverageIgnoreEnd
 
         return $string;
     }
