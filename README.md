@@ -27,15 +27,30 @@ Security::isSupportedCharset('string');
 ```
 
 ## Supported Charsets
-All charset supported by mbstring extension.  
+All charset supported by mbstring extension inside charsets list.  
 [More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
 [And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
+
+Maximum supported charset below:
+* ISO-8859-1
+* ISO-8859-5
+* ISO-8859-15
+* UTF-8
+* cp866
+* cp1251
+* cp1252
+* KOI8-R
+* BIG5
+* GB2312
+* BIG5-HKSCS
+* Shift_JIS
+* EUC-JP
+* MacRoman
 
 ## Security Methods
 ### General Static Methods
 * isSupportedCharset(charset: string): bool
 * areCharsetAliases(charsetToCheck: string, charsetReference: string): bool
-* isUTF8Alias((charsetToCheck: string): bool
 * escHTML(text: mixed, [charset: string = 'UTF-8']): string
 * escAttr(text: mixed, [charset: string = 'UTF-8']): string
 * escJS(text: mixed, [charset: string = 'UTF-8']): string

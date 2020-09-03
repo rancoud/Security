@@ -21,10 +21,16 @@ class Security
      */
     protected static function generateSupportedCharsets(): array
     {
-        $charsets = \array_map('\strtolower', \mb_list_encodings());
+        $maxSupportedCharsets = [
+            'ISO-8859-1', 'ISO-8859-5', 'ISO-8859-15', 'UTF-8', 'CP866', 'CP1251', 'Windows-1251', 'CP1252',
+            'Windows-1252', 'KOI8-R', 'BIG5', 'GB2312', 'BIG5-HKSCS', 'Shift_JIS', 'SJIS', 'SJIS-win', 'EUC-JP',
+            'eucJP-win', 'CP932', 'MacRoman'
+        ];
+
+        $charsets = \array_intersect(\mb_list_encodings(), $maxSupportedCharsets);
 
         $callbackAliases = static function (string $charset) {
-            return \array_map('\strtolower', \mb_encoding_aliases($charset));
+            return \mb_encoding_aliases($charset);
         };
 
         $aliases = \array_map($callbackAliases, $charsets);
@@ -43,14 +49,12 @@ class Security
             static::$supportedCharsets = static::generateSupportedCharsets();
         }
 
-        $lowerCharset = \strtolower($charset);
-
-        if (isset(static::$supportedCharsets[$lowerCharset])) {
+        if (isset(static::$supportedCharsets[$charset])) {
             return true;
         }
 
         foreach (static::$supportedCharsets as $aliases) {
-            if (\in_array($lowerCharset, $aliases, true)) {
+            if (\in_array($charset, $aliases, true)) {
                 return true;
             }
         }
@@ -66,62 +70,8 @@ class Security
     protected static function throwExceptionIfCharsetIsUnsupported(string $charset): void
     {
         if (!static::isSupportedCharset($charset)) {
-            // should we encode charset?
             throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
         }
-    }
-
-    /**
-     * @param string $charset1
-     * @param string $charset2
-     *
-     * @throws SecurityException
-     *
-     * @return bool
-     */
-    public static function areCharsetAliases(string $charset1, string $charset2): bool
-    {
-        static::throwExceptionIfCharsetIsUnsupported($charset1);
-        static::throwExceptionIfCharsetIsUnsupported($charset2);
-
-        $lowerCharset1 = \strtolower($charset1);
-        $lowerCharset2 = \strtolower($charset2);
-
-        if ($lowerCharset1 === $lowerCharset2) {
-            return true;
-        }
-
-        if (isset(static::$supportedCharsets[$lowerCharset1])) {
-            return \in_array($lowerCharset2, static::$supportedCharsets[$lowerCharset1], true);
-        }
-
-        if (isset(static::$supportedCharsets[$lowerCharset2])) {
-            return \in_array($lowerCharset1, static::$supportedCharsets[$lowerCharset2], true);
-        }
-
-        foreach (static::$supportedCharsets as $aliases) {
-            $isAlias1 = \in_array($lowerCharset1, $aliases, true);
-            $isAlias2 = \in_array($lowerCharset2, $aliases, true);
-
-            if ($isAlias1 || $isAlias2) {
-                return $isAlias1 && $isAlias2;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $charset
-     *
-     * @return bool
-     */
-    public static function isUTF8Alias(string $charset): bool
-    {
-        $lowerCharset = \strtolower($charset);
-
-        return \strtolower($charset) === 'utf-8'
-            || \in_array($lowerCharset, static::$supportedCharsets['utf-8'], true);
     }
 
     /**
@@ -142,7 +92,7 @@ class Security
             throw new SecurityException('String to convert is not valid for the specified charset');
         }
 
-        if (!static::isUTF8Alias($charset)) {
+        if ($charset !== 'UTF-8') {
             $string = \mb_convert_encoding($string, 'UTF-8', $charset);
         }
 
@@ -157,23 +107,17 @@ class Security
      * @param mixed  $string
      * @param string $charset
      *
-     * @throws SecurityException
-     *
      * @return string
      */
     protected static function convertStringFromUTF8($string, string $charset = 'UTF-8'): string
     {
-        // static::throwExceptionIfCharsetIsUnsupported($charset); // useless
-
         $string = (string) $string;
 
-        if (static::isUTF8Alias($charset)) {
+        if ($charset === 'UTF-8') {
             return $string;
         }
 
-        $string = \mb_convert_encoding($string, $charset, 'UTF-8');
-
-        return $string;
+        return \mb_convert_encoding($string, $charset, 'UTF-8');
     }
 
     /**
@@ -191,9 +135,7 @@ class Security
         $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $text = \str_replace('/', '&#47;', $text);
 
-        $text = static::convertStringFromUTF8($text, $charset);
-
-        return $text;
+        return static::convertStringFromUTF8($text, $charset);
     }
 
     /**
@@ -237,9 +179,7 @@ class Security
             return $entityMap[$ord] ?? \sprintf('&#x%04X;', $ord);
         }, $text);
 
-        $text = static::convertStringFromUTF8($text, $charset);
-
-        return $text;
+        return static::convertStringFromUTF8($text, $charset);
     }
 
     /**
@@ -287,8 +227,6 @@ class Security
             return \sprintf('\\u%04s\\u%04s', $highSurrogate, $lowSurrogate);
         }, $text);
 
-        $text = static::convertStringFromUTF8($text, $charset);
-
-        return $text;
+        return static::convertStringFromUTF8($text, $charset);
     }
 }
