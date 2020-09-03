@@ -9,63 +9,33 @@ namespace Rancoud\Security;
  */
 class Security
 {
-    protected static array $supportedCharsets = [
-        'ISO-8859-1'  => true, // Western European, Latin-1
-        'ISO-8859-5'  => true, // Little used cyrillic charset (Latin/Cyrillic)
-        'ISO-8859-15' => true, // Western European, Latin-9
-        'UTF-8'       => true, // ASCII compatible multi-byte 8-bit Unicode
-        'cp866'       => true, // DOS-specific Cyrillic charset
-        'cp1251'      => true, // Windows-specific Cyrillic charset
-        'cp1252'      => true, // Windows specific charset for Western European
-        'KOI8-R'      => true, // Russian
-        'BIG5'        => true, // Traditional Chinese, mainly used in Taiwan
-        'GB2312'      => true, // Simplified Chinese, national standard character set
-        'BIG5-HKSCS'  => true, // Big5 with Hong Kong extensions, Traditional Chinese
-        'Shift_JIS'   => true, // Japanese
-        'EUC-JP'      => true, // Japanese
-        'MacRoman'    => true  // Charset that was used by Mac OS
-    ];
+    /**
+     * Array of charsets supported by PHP. It will be generated when first used.
+     *
+     * @var array|null
+     */
+    protected static ?array $supportedCharsets = null;
 
     /**
-     * @param $string
-     * @param string $charset
-     *
-     * @throws SecurityException
-     *
-     * @return string
+     * @return array
      */
-    protected static function convertStringToUtf8($string, $charset = 'UTF-8'): string
+    protected static function generateSupportedCharsets(): array
     {
-        $string = (string) $string;
+        $maxSupportedCharsets = [
+            'ISO-8859-1', 'ISO-8859-5', 'ISO-8859-15', 'UTF-8', 'CP866', 'CP1251', 'Windows-1251', 'CP1252',
+            'Windows-1252', 'KOI8-R', 'BIG5', 'GB2312', 'BIG5-HKSCS', 'Shift_JIS', 'SJIS', 'SJIS-win', 'EUC-JP',
+            'eucJP-win', 'CP932', 'MacRoman'
+        ];
 
-        if ($charset !== 'UTF-8') {
-            $string = \mb_convert_encoding($string, 'UTF-8', $charset);
-        }
+        $charsets = \array_intersect(\mb_list_encodings(), $maxSupportedCharsets);
 
-        if ($string !== '' && \preg_match('/^./su', $string) !== 1) {
-            throw new SecurityException('After conversion string is not a valid UTF-8 sequence');
-        }
+        $callbackAliases = static function (string $charset) {
+            return \mb_encoding_aliases($charset);
+        };
 
-        return $string;
-    }
+        $aliases = \array_map($callbackAliases, $charsets);
 
-    /**
-     * @param $string
-     * @param string $charset
-     *
-     * @return string
-     */
-    protected static function convertStringFromUtf8($string, $charset = 'UTF-8'): string
-    {
-        $string = (string) $string;
-
-        if ($charset === 'UTF-8') {
-            return $string;
-        }
-
-        $string = \mb_convert_encoding($string, $charset, 'UTF-8');
-
-        return $string;
+        return \array_combine($charsets, $aliases);
     }
 
     /**
@@ -73,37 +43,105 @@ class Security
      *
      * @return bool
      */
-    public static function isCharsetSupported(string $charset): bool
+    public static function isSupportedCharset(string $charset): bool
     {
-        return isset(static::$supportedCharsets[$charset]);
+        if (static::$supportedCharsets === null) {
+            static::$supportedCharsets = static::generateSupportedCharsets();
+        }
+
+        if (isset(static::$supportedCharsets[$charset])) {
+            return true;
+        }
+
+        foreach (static::$supportedCharsets as $aliases) {
+            if (\in_array($charset, $aliases, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
-     * @param        $text
+     * @param string $charset
+     *
+     * @throws SecurityException
+     */
+    protected static function throwExceptionIfCharsetIsUnsupported(string $charset): void
+    {
+        if (!static::isSupportedCharset($charset)) {
+            throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
+        }
+    }
+
+    /**
+     * @param mixed  $string
      * @param string $charset
      *
      * @throws SecurityException
      *
      * @return string
      */
-    public static function escHtml($text, string $charset = 'UTF-8'): string
+    protected static function convertStringToUTF8($string, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
-            throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
+        static::throwExceptionIfCharsetIsUnsupported($charset);
+
+        $string = (string) $string;
+
+        if (!\mb_check_encoding($string, $charset)) {
+            throw new SecurityException('String to convert is not valid for the specified charset');
         }
 
-        $text = static::convertStringToUtf8($text, $charset);
+        if ($charset !== 'UTF-8') {
+            $string = \mb_convert_encoding($string, 'UTF-8', $charset);
+        }
 
-        $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
-        $text = \str_replace('/', '&#47;', $text);
+        /* @codeCoverageIgnoreStart */
+        if ($string !== '' && \preg_match('/^./su', $string) !== 1) {
+            throw new SecurityException('After conversion string is not a valid UTF-8 sequence');
+        }
+        /* @codeCoverageIgnoreEnd */
 
-        $text = static::convertStringFromUtf8($text, $charset);
-
-        return $text;
+        return $string;
     }
 
     /**
-     * @param        $text
+     * @param mixed  $string
+     * @param string $charset
+     *
+     * @return string
+     */
+    protected static function convertStringFromUTF8($string, string $charset = 'UTF-8'): string
+    {
+        $string = (string) $string;
+
+        if ($charset === 'UTF-8') {
+            return $string;
+        }
+
+        return \mb_convert_encoding($string, $charset, 'UTF-8');
+    }
+
+    /**
+     * @param mixed  $text
+     * @param string $charset
+     *
+     * @throws SecurityException
+     *
+     * @return string
+     */
+    public static function escHTML($text, string $charset = 'UTF-8'): string
+    {
+        $text = static::convertStringToUTF8($text, $charset);
+
+        $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $text = \str_replace('/', '&#47;', $text);
+
+        return static::convertStringFromUTF8($text, $charset);
+    }
+
+    /**
+     * @param mixed  $text
      * @param string $charset
      *
      * @throws SecurityException
@@ -112,11 +150,7 @@ class Security
      */
     public static function escAttr($text, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
-            throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
-        }
-
-        $text = static::convertStringToUtf8($text, $charset);
+        $text = static::convertStringToUTF8($text, $charset);
 
         $text = \preg_replace_callback('/[^a-z0-9,.\-_]/iSu', static function ($matches) {
             $chr = $matches[0];
@@ -147,26 +181,20 @@ class Security
             return $entityMap[$ord] ?? \sprintf('&#x%04X;', $ord);
         }, $text);
 
-        $text = static::convertStringFromUtf8($text, $charset);
-
-        return $text;
+        return static::convertStringFromUTF8($text, $charset);
     }
 
     /**
-     * @param        $text
+     * @param mixed  $text
      * @param string $charset
      *
      * @throws SecurityException
      *
      * @return string
      */
-    public static function escJs($text, string $charset = 'UTF-8'): string
+    public static function escJS($text, string $charset = 'UTF-8'): string
     {
-        if (!static::isCharsetSupported($charset)) {
-            throw new SecurityException(\sprintf("Charset '%s' is not supported", $charset));
-        }
-
-        $text = static::convertStringToUtf8($text, $charset);
+        $text = static::convertStringToUTF8($text, $charset);
 
         $text = \preg_replace_callback('/[^a-z0-9,._]/iSu', static function ($matches) {
             $chr = $matches[0];
@@ -201,8 +229,6 @@ class Security
             return \sprintf('\\u%04s\\u%04s', $highSurrogate, $lowSurrogate);
         }, $text);
 
-        $text = static::convertStringFromUtf8($text, $charset);
-
-        return $text;
+        return static::convertStringFromUTF8($text, $charset);
     }
 }

@@ -8,7 +8,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/rancoud/security?logo=codecov)](https://codecov.io/gh/rancoud/security)
 [![composer.lock](https://poser.pugx.org/rancoud/security/composerlock)](https://packagist.org/packages/rancoud/security)
 
-Security.  
+Escape string to output HTML (and JS).
 
 ## Installation
 ```php
@@ -19,14 +19,19 @@ composer require rancoud/security
 ```php
 Security::escAttr('string');
 
-Security::escHtml('string');
+Security::escHTML('string');
 
-Security::escJs('string');
+Security::escJS('string');
 
-Security::isCharsetSupported('string');
+Security::isSupportedCharset('string');
 ```
 
 ## Supported Charsets
+All charset supported by mbstring extension inside charsets list.  
+[More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
+[And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
+
+Maximum supported charset below:
 * ISO-8859-1
 * ISO-8859-5
 * ISO-8859-15
@@ -43,11 +48,12 @@ Security::isCharsetSupported('string');
 * MacRoman
 
 ## Security Methods
-### General Static Commands  
-* escAttr(text: mixed, [charset: string = 'UTF-8']): string  
-* escHtml(text: mixed, [charset: string = 'UTF-8']): string  
-* escJs(text: mixed, [charset: string = 'UTF-8']): string  
-* isCharsetSupported(charset: string): bool  
+### General Static Methods
+* isSupportedCharset(charset: string): bool
+* areCharsetAliases(charsetToCheck: string, charsetReference: string): bool
+* escHTML(text: mixed, [charset: string = 'UTF-8']): string
+* escAttr(text: mixed, [charset: string = 'UTF-8']): string
+* escJS(text: mixed, [charset: string = 'UTF-8']): string
 
 ## How to Dev
 `composer ci` for php-cs-fixer and phpunit and coverage  
