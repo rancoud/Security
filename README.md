@@ -27,11 +27,11 @@ Security::isSupportedCharset('string');
 ```
 
 ## Supported Charsets
-All charset supported by mbstring extension inside charsets list.  
+Charsets supported are only charsets shortlisted (see list below) which are also supported by mbstring extension.    
 [More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
 [And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
 
-Maximum supported charset below:
+Charsets shortlisted:  
 * ISO-8859-1
 * ISO-8859-5
 * ISO-8859-15
