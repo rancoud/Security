@@ -134,7 +134,7 @@ class Security
     {
         $text = static::convertStringToUTF8($text, $charset);
 
-        $text = \htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $text = \htmlspecialchars($text, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
         $text = \str_replace('/', '&#47;', $text);
 
         return static::convertStringFromUTF8($text, $charset);
