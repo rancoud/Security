@@ -97,6 +97,8 @@ class Security
         }
 
         // @codeCoverageIgnoreStart
+        /* I don't know how to reach this statement
+         */
         if ($string !== '' && \preg_match('/^./su', $string) !== 1) {
             throw new SecurityException('After conversion string is not a valid UTF-8 sequence');
         }
@@ -134,7 +136,7 @@ class Security
     {
         $text = static::convertStringToUTF8($text, $charset);
 
-        $text = \htmlspecialchars($text, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+        $text = \htmlspecialchars($text, \ENT_QUOTES | \ENT_SUBSTITUTE);
         $text = \str_replace('/', '&#47;', $text);
 
         return static::convertStringFromUTF8($text, $charset);
