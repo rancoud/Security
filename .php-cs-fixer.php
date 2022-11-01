@@ -20,6 +20,7 @@ $rules = [
         'spacing' => 'one'
     ],
     'declare_strict_types' => true,
+    'global_namespace_import' => false,
     'linebreak_after_opening_tag' => true,
     'mb_str_functions' => false, // specific for this repository
     'native_function_invocation' => [
