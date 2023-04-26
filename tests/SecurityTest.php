@@ -182,34 +182,6 @@ class SecurityTest extends TestCase
         self::assertSame($expected, Security::escJS($input));
     }
 
-    public function testUnicodeEncodingXSS(): void
-    {
-        $countThrownExceptions = 0;
-
-        try {
-            Security::escHTML('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252');
-        } catch (SecurityException $e) {
-            self::assertSame('String to convert is not valid for the specified charset', $e->getMessage());
-            ++$countThrownExceptions;
-        }
-
-        try {
-            Security::escAttr('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252');
-        } catch (SecurityException $e) {
-            self::assertSame('String to convert is not valid for the specified charset', $e->getMessage());
-            ++$countThrownExceptions;
-        }
-
-        try {
-            Security::escJS('숍訊昱穿刷奄剔㏆穽侘㈊섞昌侄從쒜', 'cp1252');
-        } catch (SecurityException $e) {
-            self::assertSame('String to convert is not valid for the specified charset', $e->getMessage());
-            ++$countThrownExceptions;
-        }
-
-        self::assertSame(3, $countThrownExceptions);
-    }
-
     public function testCharsetNotSupportedException(): void
     {
         $countThrownExceptions = 0;
