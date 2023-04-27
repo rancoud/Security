@@ -143,6 +143,65 @@ class SecurityTest extends TestCase
         ];
     }
 
+    public function dataURL(): array
+    {
+        return [
+            '<'  => ['<', '%3C'],
+            '>'  => ['>', '%3E'],
+            '\'' => ['\'', '%27'],
+            '"'  => ['"', '%22'],
+            '&'  => ['&', '%26'],
+            'Ā'  => ['Ā', '%C4%80'],
+            ','  => [',', '%2C'],
+            '.'  => ['.', '.'],
+            '_'  => ['_', '_'],
+            '-'  => ['-', '-'],
+            ':'  => [':', '%3A'],
+            ';'  => [';', '%3B'],
+            '!'  => ['!', '%21'],
+            'a'  => ['a', 'a'],
+            'A'  => ['A', 'A'],
+            'z'  => ['z', 'z'],
+            'Z'  => ['Z', 'Z'],
+            '0'  => ['0', '0'],
+            '9'  => ['9', '9'],
+            "\r" => ["\r", '%0D'],
+            "\n" => ["\n", '%0A'],
+            "\t" => ["\t", '%09'],
+            "\0" => ["\0", '%00'],
+            ' '  => [' ', '%20'],
+            '~'  => ['~', '~'],
+            '+'  => ['+', '%2B']
+        ];
+    }
+
+    public function dataCSS(): array
+    {
+        return [
+            '<'                => ['<', '\\3C '],
+            '>'                => ['>', '\\3E '],
+            '\''               => ['\'', '\\27 '],
+            '"'                => ['"', '\\22 '],
+            '&'                => ['&', '\\26 '],
+            'Ā'                => ['Ā', '\\100 '],
+            "\xF0\x90\x80\x80" => ["\xF0\x90\x80\x80", '\\10000 '],
+            ','                => [',', '\\2C '],
+            '.'                => ['.', '\\2E '],
+            '_'                => ['_', '\\5F '],
+            'a'                => ['a', 'a'],
+            'A'                => ['A', 'A'],
+            'z'                => ['z', 'z'],
+            'Z'                => ['Z', 'Z'],
+            '0'                => ['0', '0'],
+            '9'                => ['9', '9'],
+            "\r"               => ["\r", '\\D '],
+            "\n"               => ["\n", '\\A '],
+            "\t"               => ["\t", '\\9 '],
+            "\0"               => ["\0", '\\0 '],
+            ' '                => [' ', '\\20 '],
+        ];
+    }
+
     /**
      * @dataProvider dataHTML
      *
@@ -182,6 +241,32 @@ class SecurityTest extends TestCase
         self::assertSame($expected, Security::escJS($input));
     }
 
+    /**
+     * @dataProvider dataURL
+     *
+     * @param string $input
+     * @param string $expected
+     *
+     * @throws SecurityException
+     */
+    public function testEscURL(string $input, string $expected): void
+    {
+        self::assertSame($expected, Security::escURL($input));
+    }
+
+    /**
+     * @dataProvider dataCSS
+     *
+     * @param string $input
+     * @param string $expected
+     *
+     * @throws SecurityException
+     */
+    public function testEscCSS(string $input, string $expected): void
+    {
+        self::assertSame($expected, Security::escCSS($input));
+    }
+
     public function testCharsetNotSupportedException(): void
     {
         $countThrownExceptions = 0;
@@ -207,7 +292,21 @@ class SecurityTest extends TestCase
             ++$countThrownExceptions;
         }
 
-        self::assertSame(3, $countThrownExceptions);
+        try {
+            Security::escURL('a', 'nope');
+        } catch (SecurityException $e) {
+            self::assertSame("Charset 'nope' is not supported", $e->getMessage());
+            ++$countThrownExceptions;
+        }
+
+        try {
+            Security::escCSS('a', 'nope');
+        } catch (SecurityException $e) {
+            self::assertSame("Charset 'nope' is not supported", $e->getMessage());
+            ++$countThrownExceptions;
+        }
+
+        self::assertSame(5, $countThrownExceptions);
     }
 
     public function testInvalidCharacter(): void
@@ -236,7 +335,21 @@ class SecurityTest extends TestCase
             ++$countThrownExceptions;
         }
 
-        self::assertSame(3, $countThrownExceptions);
+        try {
+            Security::escURL($invalidChar);
+        } catch (SecurityException $e) {
+            self::assertSame('String to convert is not valid for the specified charset', $e->getMessage());
+            ++$countThrownExceptions;
+        }
+
+        try {
+            Security::escCSS($invalidChar);
+        } catch (SecurityException $e) {
+            self::assertSame('String to convert is not valid for the specified charset', $e->getMessage());
+            ++$countThrownExceptions;
+        }
+
+        self::assertSame(5, $countThrownExceptions);
     }
 
     /**
