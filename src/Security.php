@@ -233,4 +233,49 @@ class Security
 
         return static::convertStringFromUTF8($text, $charset);
     }
+
+    /**
+     * @param mixed  $text
+     * @param string $charset
+     *
+     * @throws SecurityException
+     *
+     * @return string
+     */
+    public static function escURL($text, string $charset = 'UTF-8'): string
+    {
+        $text = static::convertStringToUTF8($text, $charset);
+
+        $text = \rawurlencode($text);
+
+        return static::convertStringFromUTF8($text, $charset);
+    }
+
+    /**
+     * @param mixed  $text
+     * @param string $charset
+     *
+     * @throws SecurityException
+     *
+     * @return string
+     */
+    public static function escCSS($text, string $charset = 'UTF-8'): string
+    {
+        $text = static::convertStringToUTF8($text, $charset);
+
+        $text = \preg_replace_callback('/[^a-z0-9]/iSu', static function ($matches) {
+            $chr = $matches[0];
+
+            if (\strlen($chr) === 1) {
+                $ord = \ord($chr);
+            } else {
+                $chr = \mb_convert_encoding($chr, 'UTF-32BE', 'UTF-8');
+                $ord = \hexdec(\bin2hex($chr));
+            }
+
+            return \sprintf('\\%X ', $ord);
+        }, $text);
+
+        return static::convertStringFromUTF8($text, $charset);
+    }
 }

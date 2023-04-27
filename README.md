@@ -22,6 +22,10 @@ Security::escHTML('string');
 
 Security::escJS('string');
 
+Security::escURL('string');
+
+Security::escCSS('string');
+
 Security::isSupportedCharset('string');
 ```
 
@@ -53,6 +57,8 @@ Charsets shortlisted:
 * escHTML(text: mixed, [charset: string = 'UTF-8']): string
 * escAttr(text: mixed, [charset: string = 'UTF-8']): string
 * escJS(text: mixed, [charset: string = 'UTF-8']): string
+* escURL(text: mixed, [charset: string = 'UTF-8']): string
+* escCSS(text: mixed, [charset: string = 'UTF-8']): string
 
 ## How to Dev
 `composer ci` for php-cs-fixer and phpunit and coverage  
