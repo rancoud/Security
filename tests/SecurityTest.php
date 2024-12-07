@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Rancoud\Security\Security;
 use Rancoud\Security\SecurityException;
@@ -13,7 +14,7 @@ use Rancoud\Security\SecurityException;
  */
 class SecurityTest extends TestCase
 {
-    public function dataHTML(): array
+    public static function dataHTML(): array
     {
         return [
             'backtick'                      => ['`', '`'],
@@ -56,7 +57,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataAttr(): array
+    public static function dataAttr(): array
     {
         return [
             'backtick'                      => ['`', '&#x60;'],
@@ -100,7 +101,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataJS(): array
+    public static function dataJS(): array
     {
         return [
             'backtick'                      => ['`', '\\x60'],
@@ -143,7 +144,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataURL(): array
+    public static function dataURL(): array
     {
         return [
             '<'  => ['<', '%3C'],
@@ -175,7 +176,7 @@ class SecurityTest extends TestCase
         ];
     }
 
-    public function dataCSS(): array
+    public static function dataCSS(): array
     {
         return [
             '<'                => ['<', '\\3C '],
@@ -210,6 +211,7 @@ class SecurityTest extends TestCase
      *
      * @throws SecurityException
      */
+    #[DataProvider('dataHTML')]
     public function testEscHTML(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escHTML($input));
@@ -223,6 +225,7 @@ class SecurityTest extends TestCase
      *
      * @throws SecurityException
      */
+    #[DataProvider('dataAttr')]
     public function testEscAttr(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escAttr($input));
@@ -236,6 +239,7 @@ class SecurityTest extends TestCase
      *
      * @throws SecurityException
      */
+    #[DataProvider('dataJS')]
     public function testEscJS(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escJS($input));
@@ -249,6 +253,7 @@ class SecurityTest extends TestCase
      *
      * @throws SecurityException
      */
+    #[DataProvider('dataURL')]
     public function testEscURL(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escURL($input));
@@ -262,6 +267,7 @@ class SecurityTest extends TestCase
      *
      * @throws SecurityException
      */
+    #[DataProvider('dataCSS')]
     public function testEscCSS(string $input, string $expected): void
     {
         self::assertSame($expected, Security::escCSS($input));
