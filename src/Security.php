@@ -10,24 +10,50 @@ namespace Rancoud\Security;
 class Security
 {
     /**
-     * Array of charsets supported by PHP. It will be generated when first used.
+     * Array of supported charsets by PHP.<br>
+     * It will be populate on the first usage.
      *
      * @var array|null
      */
     protected static ?array $supportedCharsets = null;
 
     /**
+     * Populate supported charsets.<br>
+     * It will keep only supported encodings and aliases that are in the shortlist
+     * and available on the current PHP installation.<br>
+     * Current shortlist are:
+     * - BIG5
+     * - BIG5-HKSCS
+     * - CP866
+     * - CP932
+     * - CP1251
+     * - CP1252
+     * - EUC-JP
+     * - eucJP-win
+     * - GB2312
+     * - ISO-8859-1
+     * - ISO-8859-5
+     * - ISO-8859-15
+     * - KOI8-R
+     * - MacRoman
+     * - Shift_JIS
+     * - SJIS
+     * - SJIS-win
+     * - UTF-8
+     * - Windows-1251
+     * - Windows-1252.
+     *
      * @return array
      */
     protected static function generateSupportedCharsets(): array
     {
-        $maxSupportedCharsets = [
+        $shortlistSupportedCharsets = [
             'ISO-8859-1', 'ISO-8859-5', 'ISO-8859-15', 'UTF-8', 'CP866', 'CP1251', 'Windows-1251', 'CP1252',
             'Windows-1252', 'KOI8-R', 'BIG5', 'GB2312', 'BIG5-HKSCS', 'Shift_JIS', 'SJIS', 'SJIS-win', 'EUC-JP',
             'eucJP-win', 'CP932', 'MacRoman'
         ];
 
-        $charsets = \array_intersect(\mb_list_encodings(), $maxSupportedCharsets);
+        $charsets = \array_intersect(\mb_list_encodings(), $shortlistSupportedCharsets);
 
         $callbackAliases = static function (string $charset) {
             return \mb_encoding_aliases($charset);
@@ -39,6 +65,8 @@ class Security
     }
 
     /**
+     * Checks if charset is supported.
+     *
      * @param string $charset
      *
      * @return bool
@@ -63,6 +91,8 @@ class Security
     }
 
     /**
+     * Throws Security Exception if charset is not supported.
+     *
      * @param string $charset
      *
      * @throws SecurityException
@@ -75,6 +105,8 @@ class Security
     }
 
     /**
+     * Converts string from any charset to UTF-8.
+     *
      * @param mixed  $string
      * @param string $charset
      *
@@ -108,6 +140,8 @@ class Security
     }
 
     /**
+     * Converts string from UTF-8 to any charset.
+     *
      * @param mixed  $string
      * @param string $charset
      *
@@ -125,6 +159,8 @@ class Security
     }
 
     /**
+     * Escapes text for HTML output.
+     *
      * @param mixed  $text
      * @param string $charset
      *
@@ -143,6 +179,8 @@ class Security
     }
 
     /**
+     * Escapes text for HTML attribute output.
+     *
      * @param mixed  $text
      * @param string $charset
      *
@@ -187,6 +225,8 @@ class Security
     }
 
     /**
+     * Escapes text for JS output.
+     *
      * @param mixed  $text
      * @param string $charset
      *
@@ -235,6 +275,8 @@ class Security
     }
 
     /**
+     * Escapes text for URL output.
+     *
      * @param mixed  $text
      * @param string $charset
      *
@@ -252,6 +294,8 @@ class Security
     }
 
     /**
+     * Escapes text for CSS output.
+     *
      * @param mixed  $text
      * @param string $charset
      *
