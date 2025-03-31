@@ -159,7 +159,7 @@ class Security
     }
 
     /**
-     * Escapes string for HTML output.
+     * Escapes text for HTML output.
      *
      * @param mixed  $text
      * @param string $charset
@@ -179,7 +179,7 @@ class Security
     }
 
     /**
-     * Escapes string for HTML attribute output.
+     * Escapes text for HTML attribute output.
      *
      * @param mixed  $text
      * @param string $charset
@@ -225,7 +225,7 @@ class Security
     }
 
     /**
-     * Escapes string for JS output.
+     * Escapes text for JS output.
      *
      * @param mixed  $text
      * @param string $charset
@@ -275,7 +275,7 @@ class Security
     }
 
     /**
-     * Escapes string for URL output.
+     * Escapes text for URL output.
      *
      * @param mixed  $text
      * @param string $charset
@@ -294,7 +294,7 @@ class Security
     }
 
     /**
-     * Escapes string for CSS output.
+     * Escapes text for CSS output.
      *
      * @param mixed  $text
      * @param string $charset
