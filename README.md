@@ -16,51 +16,88 @@ composer require rancoud/security
 
 ## How to use it?
 ```php
-Security::escAttr('string');
+use Rancoud\Security\Security;
 
-Security::escHTML('string');
+// When you want to escape string for HTML output.
+echo '<p>' . Security::escHTML('<script>alert("test");</script>') . '<p>';
+// -> <p>&lt;script&gt;alert(&quot;test&quot;);&lt;&#47;script&gt;<p>
 
-Security::escJS('string');
+// When you want to escape string for HTML attribute output.
+echo '<div data-attr="' . Security::escAttr('my-data"><script>alert("test");</script><div hidden="') . '">;
+// -> <div data-attr="my-data&quot;&gt;&lt;script&gt;alert&#x28;&quot;test&quot;&#x29;&#x3B;&lt;&#x2F;script&gt;&lt;div&#x20;hidden&#x3D;&quot;"></div>
 
-Security::escURL('string');
+// When you want to escape string for JS output.
+echo 'const value = "' . Security::escJS('";alert("test");let a="') . '";';
+// -> const value = "\x22\x3Balert\x28\x22test\x22\x29\x3Blet\x20a\x3D\x22";
 
-Security::escCSS('string');
+// When you want to escape string for URL output.
+echo Security::escURL('https://example.com');
+// -> https%3A%2F%2Fexample.com
 
-Security::isSupportedCharset('string');
+// When you want to escape string for CSS output.
+echo 'body { background-color: ' . Security::escCSS('red;} body {background-image: url("https://example.com");') . '}';echo "\n";
+// -> body { background-color: red\3B \7D \20 body\20 \7B background\2D image\3A \20 url\28 \22 https\3A \2F \2F example\2E com\22 \29 \3B }
+```
+
+## Security
+### Main functions
+Escapes string for HTML output.
+```php
+public static function escHTML($text, string $charset = 'UTF-8'): string
+```
+
+Escapes string for HTML attribute output.
+```php
+public static function escAttr($text, string $charset = 'UTF-8'): string
+```
+
+Escapes string for JS output.
+```php
+public static function escJS($text, string $charset = 'UTF-8'): string
+```
+
+Escapes string for URL output.
+```php
+public static function escURL($text, string $charset = 'UTF-8'): string
+```
+
+Escapes string for CSS output.
+```php
+public static function escCSS($text, string $charset = 'UTF-8'): string
+```
+
+Checks if charset is supported.
+```php
+public static function isSupportedCharset(string $charset): bool
 ```
 
 ## Supported Charsets
-Charsets supported are only charsets shortlisted (see list below) which are also supported by mbstring extension.    
-[More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php)  
-[And at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)  
+Charsets supported are only charsets shortlisted (see list below) which are also supported by mbstring extension.  
+[More info at PHP documentation](https://www.php.net/manual/en/mbstring.encodings.php) [and at the PHP libmbfl README](https://github.com/php/php-src/tree/master/ext/mbstring/libmbfl)
 
-Charsets shortlisted:  
+Charsets shortlisted:
+* BIG5
+* BIG5-HKSCS
+* CP866
+* CP932
+* CP1251
+* CP1252
+* EUC-JP
+* eucJP-win
+* GB2312
 * ISO-8859-1
 * ISO-8859-5
 * ISO-8859-15
-* UTF-8
-* cp866
-* cp1251
-* cp1252
 * KOI8-R
-* BIG5
-* GB2312
-* BIG5-HKSCS
-* Shift_JIS
-* EUC-JP
 * MacRoman
-
-## Security Methods
-### General Static Methods
-* isSupportedCharset(charset: string): bool
-* areCharsetAliases(charsetToCheck: string, charsetReference: string): bool
-* escHTML(text: mixed, [charset: string = 'UTF-8']): string
-* escAttr(text: mixed, [charset: string = 'UTF-8']): string
-* escJS(text: mixed, [charset: string = 'UTF-8']): string
-* escURL(text: mixed, [charset: string = 'UTF-8']): string
-* escCSS(text: mixed, [charset: string = 'UTF-8']): string
+* Shift_JIS
+* SJIS
+* SJIS-win
+* UTF-8
+* Windows-1251
+* Windows-1252
 
 ## How to Dev
 `composer ci` for php-cs-fixer and phpunit and coverage  
 `composer lint` for php-cs-fixer  
-`composer test` for phpunit and coverage  
+`composer test` for phpunit and coverage
