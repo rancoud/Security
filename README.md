@@ -23,7 +23,7 @@ echo '<p>' . Security::escHTML('<script>alert("test");</script>') . '<p>';
 // -> <p>&lt;script&gt;alert(&quot;test&quot;);&lt;&#47;script&gt;<p>
 
 // When you want to escape string for HTML attribute output.
-echo '<div data-attr="' . Security::escAttr('my-data"><script>alert("test");</script><div hidden="') . '">;
+echo '<div data-attr="' . Security::escAttr('my-data"><script>alert("test");</script><div hidden="') . '">';
 // -> <div data-attr="my-data&quot;&gt;&lt;script&gt;alert&#x28;&quot;test&quot;&#x29;&#x3B;&lt;&#x2F;script&gt;&lt;div&#x20;hidden&#x3D;&quot;"></div>
 
 // When you want to escape string for JS output.
@@ -37,6 +37,12 @@ echo Security::escURL('https://example.com');
 // When you want to escape string for CSS output.
 echo 'body { background-color: ' . Security::escCSS('red;} body {background-image: url("https://example.com");') . '}';echo "\n";
 // -> body { background-color: red\3B \7D \20 body\20 \7B background\2D image\3A \20 url\28 \22 https\3A \2F \2F example\2E com\22 \29 \3B }
+
+// Checks if charset is supported.
+echo Security::isSupportedCharset('ISO-8859-15');
+// -> true
+echo Security::isSupportedCharset('foo');
+// -> false
 ```
 
 ## Security
