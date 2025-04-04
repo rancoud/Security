@@ -10,10 +10,8 @@ namespace Rancoud\Security;
 class Security
 {
     /**
-     * Array of supported charsets by PHP.<br>
-     * It will be populate on the first usage.
-     *
-     * @var array|null
+     * @var array|null Array of supported charsets by PHP.<br>
+     *                 It will be populate on the first usage.
      */
     protected static ?array $supportedCharsets = null;
 
