@@ -206,9 +206,6 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider dataHTML
      *
-     * @param string $input
-     * @param string $expected
-     *
      * @throws SecurityException
      */
     #[DataProvider('dataHTML')]
@@ -219,9 +216,6 @@ class SecurityTest extends TestCase
 
     /**
      * @dataProvider dataAttr
-     *
-     * @param string $input
-     * @param string $expected
      *
      * @throws SecurityException
      */
@@ -234,9 +228,6 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider dataJS
      *
-     * @param string $input
-     * @param string $expected
-     *
      * @throws SecurityException
      */
     #[DataProvider('dataJS')]
@@ -248,9 +239,6 @@ class SecurityTest extends TestCase
     /**
      * @dataProvider dataURL
      *
-     * @param string $input
-     * @param string $expected
-     *
      * @throws SecurityException
      */
     #[DataProvider('dataURL')]
@@ -261,9 +249,6 @@ class SecurityTest extends TestCase
 
     /**
      * @dataProvider dataCSS
-     *
-     * @param string $input
-     * @param string $expected
      *
      * @throws SecurityException
      */
