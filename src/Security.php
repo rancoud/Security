@@ -40,8 +40,6 @@ class Security
      * - UTF-8
      * - Windows-1251
      * - Windows-1252.
-     *
-     * @return array
      */
     protected static function generateSupportedCharsets(): array
     {
@@ -64,10 +62,6 @@ class Security
 
     /**
      * Checks if charset is supported.
-     *
-     * @param string $charset
-     *
-     * @return bool
      */
     public static function isSupportedCharset(string $charset): bool
     {
@@ -91,8 +85,6 @@ class Security
     /**
      * Throws Security Exception if charset is not supported.
      *
-     * @param string $charset
-     *
      * @throws SecurityException
      */
     protected static function throwExceptionIfCharsetIsUnsupported(string $charset): void
@@ -105,12 +97,7 @@ class Security
     /**
      * Converts string from any charset to UTF-8.
      *
-     * @param mixed  $string
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     protected static function convertStringToUTF8($string, string $charset = 'UTF-8'): string
     {
@@ -139,11 +126,6 @@ class Security
 
     /**
      * Converts string from UTF-8 to any charset.
-     *
-     * @param mixed  $string
-     * @param string $charset
-     *
-     * @return string
      */
     protected static function convertStringFromUTF8($string, string $charset = 'UTF-8'): string
     {
@@ -159,12 +141,7 @@ class Security
     /**
      * Escapes text for HTML output.
      *
-     * @param mixed  $text
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     public static function escHTML($text, string $charset = 'UTF-8'): string
     {
@@ -179,12 +156,7 @@ class Security
     /**
      * Escapes text for HTML attribute output.
      *
-     * @param mixed  $text
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     public static function escAttr($text, string $charset = 'UTF-8'): string
     {
@@ -225,12 +197,7 @@ class Security
     /**
      * Escapes text for JS output.
      *
-     * @param mixed  $text
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     public static function escJS($text, string $charset = 'UTF-8'): string
     {
@@ -275,12 +242,7 @@ class Security
     /**
      * Escapes text for URL output.
      *
-     * @param mixed  $text
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     public static function escURL($text, string $charset = 'UTF-8'): string
     {
@@ -294,12 +256,7 @@ class Security
     /**
      * Escapes text for CSS output.
      *
-     * @param mixed  $text
-     * @param string $charset
-     *
      * @throws SecurityException
-     *
-     * @return string
      */
     public static function escCSS($text, string $charset = 'UTF-8'): string
     {
