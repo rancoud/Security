@@ -60,9 +60,7 @@ class Security
         return \array_combine($charsets, $aliases);
     }
 
-    /**
-     * Checks if charset is supported.
-     */
+    /** Checks if charset is supported. */
     public static function isSupportedCharset(string $charset): bool
     {
         if (static::$supportedCharsets === null) {
@@ -114,8 +112,7 @@ class Security
         }
 
         // @codeCoverageIgnoreStart
-        /* I don't know how to reach this statement
-         */
+        // I don't know how to reach this statement
         if ($string !== '' && \preg_match('/^./su', $string) !== 1) {
             throw new SecurityException('After conversion string is not a valid UTF-8 sequence');
         }
