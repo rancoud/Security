@@ -97,7 +97,7 @@ class Security
      *
      * @throws SecurityException
      */
-    protected static function convertStringToUTF8($string, string $charset = 'UTF-8'): string
+    protected static function convertStringToUTF8(mixed $string, string $charset = 'UTF-8'): string
     {
         static::throwExceptionIfCharsetIsUnsupported($charset);
 
@@ -121,10 +121,8 @@ class Security
         return $string;
     }
 
-    /**
-     * Converts string from UTF-8 to any charset.
-     */
-    protected static function convertStringFromUTF8($string, string $charset = 'UTF-8'): string
+    /** Converts string from UTF-8 to any charset. */
+    protected static function convertStringFromUTF8(mixed $string, string $charset = 'UTF-8'): string
     {
         $string = (string) $string;
 
@@ -140,7 +138,7 @@ class Security
      *
      * @throws SecurityException
      */
-    public static function escHTML($text, string $charset = 'UTF-8'): string
+    public static function escHTML(mixed $text, string $charset = 'UTF-8'): string
     {
         $text = static::convertStringToUTF8($text, $charset);
 
@@ -155,7 +153,7 @@ class Security
      *
      * @throws SecurityException
      */
-    public static function escAttr($text, string $charset = 'UTF-8'): string
+    public static function escAttr(mixed $text, string $charset = 'UTF-8'): string
     {
         $text = static::convertStringToUTF8($text, $charset);
 
@@ -196,7 +194,7 @@ class Security
      *
      * @throws SecurityException
      */
-    public static function escJS($text, string $charset = 'UTF-8'): string
+    public static function escJS(mixed $text, string $charset = 'UTF-8'): string
     {
         $text = static::convertStringToUTF8($text, $charset);
 
@@ -241,7 +239,7 @@ class Security
      *
      * @throws SecurityException
      */
-    public static function escURL($text, string $charset = 'UTF-8'): string
+    public static function escURL(mixed $text, string $charset = 'UTF-8'): string
     {
         $text = static::convertStringToUTF8($text, $charset);
 
@@ -255,7 +253,7 @@ class Security
      *
      * @throws SecurityException
      */
-    public static function escCSS($text, string $charset = 'UTF-8'): string
+    public static function escCSS(mixed $text, string $charset = 'UTF-8'): string
     {
         $text = static::convertStringToUTF8($text, $charset);
 
