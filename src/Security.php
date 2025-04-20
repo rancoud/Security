@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Rancoud\Security;
 
-/**
- * Class Security.
- */
 class Security
 {
     /**

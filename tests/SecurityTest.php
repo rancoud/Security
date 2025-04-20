@@ -9,11 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Rancoud\Security\Security;
 use Rancoud\Security\SecurityException;
 
-/**
- * Class SecurityTest.
- *
- * @internal
- */
+/** @internal */
 class SecurityTest extends TestCase
 {
     public static function provideEscHTMLDataCases(): iterable
