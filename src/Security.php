@@ -156,7 +156,12 @@ class Security
 
         $text = \preg_replace_callback('/[^a-z0-9,.\-_]/iSu', static function ($matches) {
             $chr = $matches[0];
-            $ord = \ord($chr);
+
+            if (\strlen($chr) === 1) {
+                $ord = \ord($chr);
+            } else {
+                $ord = \mb_ord($chr, 'UTF-8');
+            }
 
             if (($ord <= 0x1F && $chr !== "\t" && $chr !== "\n" && $chr !== "\r")
                 || ($ord >= 0x7F && $ord <= 0x9F)

@@ -426,7 +426,7 @@ class SecurityTest extends TestCase
 
     public function testInvalidCharacter(): void
     {
-        $invalidChar = \chr(99999999);
+        $invalidChar = "\xFF";
         $countThrownExceptions = 0;
 
         try {
