@@ -5,7 +5,6 @@
 [![Packagist Downloads](https://img.shields.io/packagist/dt/rancoud/security)](https://packagist.org/packages/rancoud/security)
 [![Composer dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/rancoud/Security/blob/master/composer.json)
 [![Test workflow](https://img.shields.io/github/actions/workflow/status/rancoud/security/test.yml?branch=master)](https://github.com/rancoud/security/actions/workflows/test.yml)
-[![Codecov](https://img.shields.io/codecov/c/github/rancoud/security?logo=codecov)](https://codecov.io/gh/rancoud/security)
 
 Escape string to output HTML (and JS).
 
